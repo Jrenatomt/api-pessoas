@@ -6,12 +6,11 @@ import com.pessoas.dto.PessoaDTO;
 import com.pessoas.service.EnderecoService;
 import com.pessoas.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 
@@ -40,9 +39,7 @@ public class PessoaController {
     @PostMapping
     public ResponseEntity<PessoaDTO> criarPessoa(@Valid @RequestBody PessoaDTO pessoaDTO) {
         PessoaDTO pessoaSalva = pessoaService.salvaPessoa(pessoaDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(pessoaSalva.getId()).toUri();
-        return ResponseEntity.created(uri).body(pessoaSalva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
     }
 
     @PutMapping(value = "/{pessoaId}")
@@ -60,7 +57,7 @@ public class PessoaController {
     @PostMapping(value = "/{pessoaId}/enderecos")
     public ResponseEntity<EnderecoDTO> criaEndereco(@PathVariable Long pessoaId, @Valid @RequestBody EnderecoDTO endereco) {
         EnderecoDTO novoEndereco = enderecoService.criarEndereco(pessoaId, endereco);
-        return ResponseEntity.ok().body(novoEndereco);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoEndereco);
     }
 
     @PutMapping(value = "/{pessoaId}/{enderecoId}")
